@@ -5,7 +5,9 @@ package paxVersion: 1;
 
 
 package classNames
+	add: #Alumno;
 	add: #Circunferencia;
+	add: #Comision;
 	add: #Triangulo;
 	yourself.
 
@@ -23,9 +25,19 @@ package!
 
 "Class Definitions"!
 
+Object subclass: #Alumno
+	instanceVariableNames: 'legajo nombre nota'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
 Object subclass: #Circunferencia
 	instanceVariableNames: 'radio'
 	classVariableNames: 'Pi'
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+Object subclass: #Comision
+	instanceVariableNames: 'coleccionAlumnos'
+	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 Object subclass: #Triangulo
@@ -44,6 +56,36 @@ Object subclass: #Triangulo
 "Source Globals"!
 
 "Classes"!
+
+Alumno guid: (GUID fromString: '{90f4c07f-4844-45cf-b02e-ac9d74977340}')!
+Alumno comment: ''!
+!Alumno categoriesForClass!Kernel-Objects! !
+!Alumno methodsFor!
+
+cargaDatos
+"establece los datos de los alumnos"
+legajo := Prompter prompt: 'Ingrese legajo'.
+nombre := Prompter prompt: 'Ingrese nombre'.
+nota := (Prompter prompt: 'Ingrese legajo') asNumber .
+^self!
+
+muestraLegajo
+"devuelve el legajo del alumno"
+^legajo!
+
+muestraNombre
+"devuelve el nombre del alumno"
+^nombre!
+
+muestraNota
+"devuelve la nota del alumno"
+^nota! !
+!Alumno categoriesForMethods!
+cargaDatos!public! !
+muestraLegajo!public! !
+muestraNombre!public! !
+muestraNota!public! !
+!
 
 Circunferencia guid: (GUID fromString: '{0adb3001-5e1e-4104-8b98-174953184d67}')!
 Circunferencia comment: ''!
@@ -74,6 +116,58 @@ asignaPi
 Pi := Float pi.! !
 !Circunferencia class categoriesForMethods!
 asignaPi!public! !
+!
+
+Comision guid: (GUID fromString: '{2ef28085-2633-482c-ba46-e7d5dd83f09e}')!
+Comision comment: ''!
+!Comision categoriesForClass!Kernel-Objects! !
+!Comision methodsFor!
+
+calculaPromedio!
+
+cargaAlumnos!
+
+consulta
+|leg aux|
+leg:= Prompter prompt: 'Ingrese el numero de legajo del alumno'.
+aux := coleccionAlumnos detect:[:i | i muestraLegajo = leg]
+ifNone:[ aux := nil].!
+
+inicio
+"contener los mensajes que resuelvan aquellas cuestiones
+necesarias para arrancar con la ejecución."
+
+coleccionAlumnos := OrderedCollection new.
+!
+
+listaA
+|aux|
+aux:= coleccionAlumnos select:[:i | i muestraNota > self calculaPromedio].!
+
+listaB!
+
+listaC
+
+|aux|
+aux:= coleccionAlumnos asSortedCollection: [:a :b | a muestraNota> b muetraNota].!
+
+menu
+
+|op rta|
+rta:= true.
+[rta] whileTrue: [ op:= Prompter prompt: '1- lista1 2- consulta 3- salir'.
+op=='1' ifTrue:[ self listaA ].
+op=='2' ifTrue:[ self consulta].
+op=='3' ifTrue:[ rta:= false]].! !
+!Comision categoriesForMethods!
+calculaPromedio!public! !
+cargaAlumnos!public! !
+consulta!public! !
+inicio!public! !
+listaA!public! !
+listaB!public! !
+listaC!public! !
+menu!public! !
 !
 
 Triangulo guid: (GUID fromString: '{3ae30f3f-5623-4f04-9710-80dfc804065b}')!
