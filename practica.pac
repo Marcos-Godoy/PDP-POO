@@ -6,6 +6,7 @@ package paxVersion: 1;
 
 package classNames
 	add: #Circunferencia;
+	add: #Triangulo;
 	yourself.
 
 package binaryGlobalNames: (Set new
@@ -25,6 +26,11 @@ package!
 Object subclass: #Circunferencia
 	instanceVariableNames: 'radio'
 	classVariableNames: 'Pi'
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+Object subclass: #Triangulo
+	instanceVariableNames: 'ladoA ladoB ladoC'
+	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 
@@ -68,6 +74,30 @@ asignaPi
 Pi := Float pi.! !
 !Circunferencia class categoriesForMethods!
 asignaPi!public! !
+!
+
+Triangulo guid: (GUID fromString: '{3ae30f3f-5623-4f04-9710-80dfc804065b}')!
+Triangulo comment: ''!
+!Triangulo categoriesForClass!Kernel-Objects! !
+!Triangulo methodsFor!
+
+cargaDatos
+"carga los tres lados de un triangulo"
+ladoA := (Prompter prompt: 'Ingrese el primer lado' ).
+ladoB := (Prompter prompt: 'Ingrese el segundo lado' ).
+ladoC := (Prompter prompt: 'Ingrese el tercer lado' ).!
+
+clasificar
+"Clasifica a un triangulo"
+((ladoA = ladoB) and: [ladoB = ladoC ] )
+ifTrue: [^'Equilatero']
+ifFalse: [(ladoA = ladoB or: [(ladoB = ladoC) or: [ladoA = ladoC ] ] )
+	ifTrue: [^'Isosceles']
+	ifFalse: [^'Escaleno'].
+].! !
+!Triangulo categoriesForMethods!
+cargaDatos!public! !
+clasificar!public! !
 !
 
 "Binary Globals"!
