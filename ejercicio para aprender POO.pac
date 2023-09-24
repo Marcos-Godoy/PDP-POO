@@ -9,6 +9,7 @@ package classNames
 	add: #Docente;
 	add: #Materia;
 	add: #Persona;
+	add: #Universidad;
 	yourself.
 
 package binaryGlobalNames: (Set new
@@ -20,7 +21,8 @@ package globalAliases: (Set new
 package setPrerequisites: #(
 	'..\..\..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Base\Dolphin'
 	'..\..\..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Base\Dolphin Legacy Date & Time'
-	'..\..\..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Base\Dolphin Message Box').
+	'..\..\..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Base\Dolphin Message Box'
+	'..\..\..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\MVP\Presenters\Prompters\Dolphin Prompter').
 
 package!
 
@@ -36,14 +38,19 @@ Object subclass: #Persona
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+Object subclass: #Universidad
+	instanceVariableNames: 'alumnos docentes'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
 Persona subclass: #Alumno
-	instanceVariableNames: 'fechaInscripcion carrera materias'
+	instanceVariableNames: 'fechaInscripcion carrera materias legajo'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 Persona subclass: #Docente
-	instanceVariableNames: 'fechaAlta cargo'
-	classVariableNames: ''
+	instanceVariableNames: 'codigo fechaAlta cargo'
+	classVariableNames: 'UltimoCodigo'
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 
@@ -102,6 +109,18 @@ Persona comment: ''!
 !Persona categoriesForClass!Kernel-Objects! !
 !Persona methodsFor!
 
+cargaDatos
+|estado|
+nombre := Prompter prompt: 'Ingrese nombre de la persona'.
+genero := Prompter prompt: 'Ingrese genero'.
+fechaNacimiento := Date fromString: (Prompter prompt: 'Ingrese fecha de Nacimiento DD/MM/YYYY').
+estado := (Prompter prompt: 'Ingrese estado civil (C/D/S)') asUppercase.
+estado = 'C'
+ifTrue: [ self casado ]
+ifFalse: [ estado = 'D'
+ifTrue: [ self divorciado ]
+ifFalse: [ self soltero ]].!
+
 casado
 estadoCivil := 'Casado/a'.
 !
@@ -150,6 +169,7 @@ soltero
 estadoCivil := 'Soltero/a'.
 ! !
 !Persona categoriesForMethods!
+cargaDatos!public! !
 casado!public! !
 divorciado!public! !
 edad!public! !
@@ -167,6 +187,69 @@ saludar!public! !
 soltero!public! !
 !
 
+Universidad guid: (GUID fromString: '{7e645b28-6351-46ef-b2ea-7caba809db21}')!
+Universidad comment: ''!
+!Universidad categoriesForClass!Kernel-Objects! !
+!Universidad methodsFor!
+
+altaDocente
+|docente|
+docente := Docente new.
+docente cargaDatos.
+docentes add: docente.!
+
+inicializa
+alumnos := OrderedCollection new.
+docentes := OrderedCollection new.
+Docente inicializaUltimoCodigo.!
+
+inscribirAlumno
+|alumno|
+alumno := Alumno new.
+alumno inicializa.
+alumno cargaDatos.
+alumnos add: alumno.
+!
+
+listadoAlumnos
+|alumnosOrd|
+alumnosOrd := alumnos asSortedCollection: [ :unAlumno :otroAlumno | unAlumno promedio > unAlumno promedio ].
+Transcript show: 'Listado de todos los alumnos ordenado por promedio ascendente'; cr.
+alumnosOrd do: [:unAlumno | Transcript show: 'Nombre: ', unAlumno nombre, ' - promedio: ', unAlumno promedio printString; cr ].
+!
+
+listadoDocentes
+|docentesOrd|
+docentesOrd := docentes asSortedCollection: [ :unDocente :otroDocente | unDocente nombre > unDocente nombre].
+Transcript show: 'Listado de docentes ordenado por nombre'; cr.
+docentesOrd do: [:unDocente | Transcript show: 'Nombre: ', unDocente nombre, ' - cargo: ', unDocente cargo; cr ].
+!
+
+menu
+| op |
+op := 5.
+[ op = 0 ] whileFalse: [
+MessageBox notify: 'MENU:
+1- Inscribir alumno
+2- Alta docente
+3- Listado de alumnos
+4- Listado de docentes
+0- Salir'.
+op:= (Prompter prompt:'Ingrese opción:') asNumber
+asInteger.
+( op = 1 ) ifTrue:[ self inscribirAlumno ].
+( op = 2 ) ifTrue:[ self altaDocente].
+( op = 3 ) ifTrue: [ self listadoAlumnos ].
+( op = 4 ) ifTrue: [ self listadoDocentes ]] .! !
+!Universidad categoriesForMethods!
+altaDocente!public! !
+inicializa!public! !
+inscribirAlumno!public! !
+listadoAlumnos!public! !
+listadoDocentes!public! !
+menu!public! !
+!
+
 Alumno guid: (GUID fromString: '{dc75323c-84f7-419a-a6a9-24c23d8358e2}')!
 Alumno comment: ''!
 !Alumno categoriesForClass!Kernel-Objects! !
@@ -178,6 +261,12 @@ mat := materias detect: [:unaMateria| unaMateria nombre = unNombreMateria] ifNon
 mat isNil ifTrue: [^ MessageBox notify: 'El alumno no cursa la materia solicitada'].
 mat nota: unEntero.
 !
+
+cargaDatos
+super cargaDatos.
+legajo := Prompter prompt: 'Ingrese legajo'.
+fechaInscripcion := Date today.
+carrera := Prompter prompt: 'Ingrese la carrera'.!
 
 carrera
 ^ carrera!
@@ -238,6 +327,7 @@ saludar
 ! !
 !Alumno categoriesForMethods!
 asignarNota:a:!public! !
+cargaDatos!public! !
 carrera!public! !
 carrera:!public! !
 diasEstudiando!public! !
@@ -261,6 +351,13 @@ Docente comment: ''!
 antiguedad
 ^ Date today yearsSince: fechaAlta!
 
+cargaDatos
+super cargaDatos.
+Docente incrementaUltimoCodigo.
+codigo := Docente ultimoCodigo.
+fechaAlta := Date fromString: (Prompter prompt: 'Ingrese fecha de alta (dd/mm/yyyy)').
+cargo := Prompter prompt: 'Ingrese el cargo'.!
+
 cargo
 ^ cargo!
 
@@ -277,11 +374,28 @@ saludar
 ^ Transcript show: 'Hola, mi nombre es ', nombre, ' y soy ', cargo, ' desde hace', self antiguedad, ' años'.! !
 !Docente categoriesForMethods!
 antiguedad!public! !
+cargaDatos!public! !
 cargo!public! !
 cargo:!public! !
 fechaAlta!public! !
 fechaAlta:!public! !
 saludar!public! !
+!
+
+!Docente class methodsFor!
+
+incrementaUltimoCodigo
+UltimoCodigo := UltimoCodigo + 1!
+
+inicializaUltimoCodigo
+UltimoCodigo := 0!
+
+ultimoCodigo
+^ UltimoCodigo! !
+!Docente class categoriesForMethods!
+incrementaUltimoCodigo!public! !
+inicializaUltimoCodigo!public! !
+ultimoCodigo!public! !
 !
 
 "Binary Globals"!
