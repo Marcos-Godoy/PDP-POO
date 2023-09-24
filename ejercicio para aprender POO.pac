@@ -5,6 +5,8 @@ package paxVersion: 1;
 
 
 package classNames
+	add: #Alumno;
+	add: #Docente;
 	add: #Persona;
 	yourself.
 
@@ -24,6 +26,16 @@ package!
 
 Object subclass: #Persona
 	instanceVariableNames: 'nombre genero fechaNacimiento estadoCivil'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+Persona subclass: #Alumno
+	instanceVariableNames: 'fechaInscripcion carrera'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+Persona subclass: #Docente
+	instanceVariableNames: 'fechaAlta cargo'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -107,6 +119,70 @@ nombre!public! !
 nombre:!public! !
 saludar!public! !
 soltero!public! !
+!
+
+Alumno guid: (GUID fromString: '{dc75323c-84f7-419a-a6a9-24c23d8358e2}')!
+Alumno comment: ''!
+!Alumno categoriesForClass!Kernel-Objects! !
+!Alumno methodsFor!
+
+carrera
+^ carrera!
+
+carrera: unString
+carrera := unString!
+
+diasEstudiando
+^ Date today subtractDate: fechaInscripcion
+!
+
+fechaInscripcion
+^ fechaInscripcion!
+
+fechaInscripcion: unaFecha
+fechaInscripcion := unaFecha!
+
+saludar
+^ Transcript show: 'Hola, mi nombre es ', nombre, 'y estudio la carrera ', carrera.
+! !
+!Alumno categoriesForMethods!
+carrera!public! !
+carrera:!public! !
+diasEstudiando!public! !
+fechaInscripcion!public! !
+fechaInscripcion:!public! !
+saludar!public! !
+!
+
+Docente guid: (GUID fromString: '{dd2f9715-47d6-434e-92d2-004e2be83c93}')!
+Docente comment: ''!
+!Docente categoriesForClass!Kernel-Objects! !
+!Docente methodsFor!
+
+antiguedad
+^ Date today yearsSince: fechaAlta!
+
+cargo
+^ cargo!
+
+cargo: unString
+cargo := unString!
+
+fechaAlta
+^ fechaAlta!
+
+fechaAlta: unaFecha
+fechaAlta := unaFecha!
+
+saludar
+^ Transcript show: 'Hola, mi nombre es ', nombre, ' y soy ', cargo, ' desde hace', self antiguedad, ' años'.! !
+!Docente categoriesForMethods!
+antiguedad!public! !
+cargo!public! !
+cargo:!public! !
+fechaAlta!public! !
+fechaAlta:!public! !
+saludar!public! !
 !
 
 "Binary Globals"!
