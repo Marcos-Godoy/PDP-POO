@@ -28,3 +28,7 @@ alumno promedio.
 
 alumno asignarNota: 4 a: 'Fisica'.
 alumno promedio.
+------------------
+alumno listarTodasLasMaterias.
+alumno listarMateriasAprobadas.
+alumno listarMateriasReprobadas.
