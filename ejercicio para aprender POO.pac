@@ -7,6 +7,7 @@ package paxVersion: 1;
 package classNames
 	add: #Alumno;
 	add: #Docente;
+	add: #Materia;
 	add: #Persona;
 	yourself.
 
@@ -18,19 +19,25 @@ package globalAliases: (Set new
 
 package setPrerequisites: #(
 	'..\..\..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Base\Dolphin'
-	'..\..\..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Base\Dolphin Legacy Date & Time').
+	'..\..\..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Base\Dolphin Legacy Date & Time'
+	'..\..\..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Base\Dolphin Message Box').
 
 package!
 
 "Class Definitions"!
 
+Object subclass: #Materia
+	instanceVariableNames: 'nombre anioCursado horario nota'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
 Object subclass: #Persona
 	instanceVariableNames: 'nombre genero fechaNacimiento estadoCivil'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 Persona subclass: #Alumno
-	instanceVariableNames: 'fechaInscripcion carrera'
+	instanceVariableNames: 'fechaInscripcion carrera materias'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -50,6 +57,45 @@ Persona subclass: #Docente
 "Source Globals"!
 
 "Classes"!
+
+Materia guid: (GUID fromString: '{99af4f86-fce2-40c5-98b0-0398ebed4f03}')!
+Materia comment: ''!
+!Materia categoriesForClass!Kernel-Objects! !
+!Materia methodsFor!
+
+anioCursado
+^ anioCursado!
+
+anioCursado: unEntero
+anioCursado := unEntero!
+
+horario
+^ horario!
+
+horario: unString
+horario := unString!
+
+nombre
+^ nombre!
+
+nombre: unString
+nombre := unString!
+
+nota
+^ nota!
+
+nota: unNumero
+nota := unNumero! !
+!Materia categoriesForMethods!
+anioCursado!public! !
+anioCursado:!public! !
+horario!public! !
+horario:!public! !
+nombre!public! !
+nombre:!public! !
+nota!public! !
+nota:!public! !
+!
 
 Persona guid: (GUID fromString: '{cc8b39b6-4125-4a04-baed-0a6987d6c996}')!
 Persona comment: ''!
@@ -126,6 +172,13 @@ Alumno comment: ''!
 !Alumno categoriesForClass!Kernel-Objects! !
 !Alumno methodsFor!
 
+asignarNota: unEntero a: unNombreMateria
+|mat|
+mat := materias detect: [:unaMateria| unaMateria nombre = unNombreMateria] ifNone: [nil].
+mat isNil ifTrue: [^ MessageBox notify: 'El alumno no cursa la materia solicitada'].
+mat nota: unEntero.
+!
+
 carrera
 ^ carrera!
 
@@ -142,15 +195,42 @@ fechaInscripcion
 fechaInscripcion: unaFecha
 fechaInscripcion := unaFecha!
 
+inicializa
+materias := OrderedCollection new.!
+
+inscribirEn: unaMateria
+materias add: unaMateria!
+
+listarTodasLasMaterias
+|ordenadas|
+ordenadas := materias asSortedCollection: [:unaMateria :otraMateria| unaMateria nombre < otraMateria nombre ].
+Transcript show: 'Listado de todas las materias: '; cr.
+ ordenadas do: [:unaMateria | Transcript show: unaMateria nombre, ' - nota: ', unaMateria nota printString; cr ].!
+
+materiasCursando
+^ materias size!
+
+promedio
+|acum|
+acum := 0.
+materias do: [:unaMateria | acum := acum + unaMateria nota].
+^ acum / materias size asFloat!
+
 saludar
 ^ Transcript show: 'Hola, mi nombre es ', nombre, 'y estudio la carrera ', carrera.
 ! !
 !Alumno categoriesForMethods!
+asignarNota:a:!public! !
 carrera!public! !
 carrera:!public! !
 diasEstudiando!public! !
 fechaInscripcion!public! !
 fechaInscripcion:!public! !
+inicializa!public! !
+inscribirEn:!public! !
+listarTodasLasMaterias!public! !
+materiasCursando!public! !
+promedio!public! !
 saludar!public! !
 !
 
