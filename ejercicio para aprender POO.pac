@@ -201,6 +201,23 @@ materias := OrderedCollection new.!
 inscribirEn: unaMateria
 materias add: unaMateria!
 
+listarMateriasAprobadas
+|aprobadas ordenadas|
+aprobadas := materias select: [:unaMateria | unaMateria nota >= 6].
+ordenadas := aprobadas asSortedCollection: [:unaMateria :otraMateria| unaMateria nota > otraMateria nota ].
+Transcript show: 'Listado de materias aprobadas: '; cr.
+ordenadas do: [:unaMateria |
+Transcript show: unaMateria nombre, ' - nota: ',
+unaMateria nota printString; cr ].!
+
+listarMateriasReprobadas
+|reprobadas ordenadas|
+reprobadas := materias select: [:unaMateria | unaMateria nota < 6].
+ordenadas := reprobadas asSortedCollection: [:unaMateria :otraMateria| unaMateria nota > otraMateria nota ].
+Transcript show: 'Listado de materias reprobadas: '; cr. 
+ordenadas do: [:unaMateria |
+	Transcript show: unaMateria nombre, ' - nota: ', unaMateria nota printString; cr ].!
+
 listarTodasLasMaterias
 |ordenadas|
 ordenadas := materias asSortedCollection: [:unaMateria :otraMateria| unaMateria nombre < otraMateria nombre ].
@@ -228,6 +245,8 @@ fechaInscripcion!public! !
 fechaInscripcion:!public! !
 inicializa!public! !
 inscribirEn:!public! !
+listarMateriasAprobadas!public! !
+listarMateriasReprobadas!public! !
 listarTodasLasMaterias!public! !
 materiasCursando!public! !
 promedio!public! !
