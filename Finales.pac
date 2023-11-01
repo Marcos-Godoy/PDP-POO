@@ -12,11 +12,17 @@ package classNames
 	add: #Caballo;
 	add: #Campo;
 	add: #ClienteVivero;
+	add: #DosCuerpos;
 	add: #Duenio;
+	add: #Empresa;
 	add: #Establecimiento;
 	add: #PedidoVivero;
 	add: #Planta;
 	add: #Plantin;
+	add: #Sillon;
+	add: #Tela;
+	add: #TresCuerpos;
+	add: #UnCuerpo;
 	add: #Vivero;
 	yourself.
 
@@ -56,6 +62,11 @@ Object subclass: #Duenio
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+Object subclass: #Empresa
+	instanceVariableNames: 'sillones telas'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
 Object subclass: #Establecimiento
 	instanceVariableNames: 'alojamientos duenios caballos'
 	classVariableNames: ''
@@ -68,6 +79,16 @@ Object subclass: #PedidoVivero
 	classInstanceVariableNames: ''!
 Object subclass: #Planta
 	instanceVariableNames: 'nombre descripcion precio'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+Object subclass: #Sillon
+	instanceVariableNames: 'modelo tela m2 recargo'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+Object subclass: #Tela
+	instanceVariableNames: 'nombre costoxm2'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -99,6 +120,21 @@ Planta subclass: #ArbolMayorPorte
 Planta subclass: #Plantin
 	instanceVariableNames: 'tipo'
 	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+Sillon subclass: #DosCuerpos
+	instanceVariableNames: ''
+	classVariableNames: 'PrecioBase'
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+Sillon subclass: #TresCuerpos
+	instanceVariableNames: ''
+	classVariableNames: 'PrecioBase'
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+Sillon subclass: #UnCuerpo
+	instanceVariableNames: ''
+	classVariableNames: 'PrecioBase'
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 
@@ -196,6 +232,31 @@ domicilio := (Prompter prompt: 'Ingrese domicilio' ).
 contacto := Prompter prompt: 'Ingrese telefono de contacto'.! !
 !Duenio categoriesForMethods!
 cargaDatos!public! !
+!
+
+Empresa guid: (GUID fromString: '{36943325-f231-4c8b-8ded-5612a46d3d80}')!
+Empresa comment: ''!
+!Empresa categoriesForClass!Kernel-Objects! !
+!Empresa methodsFor!
+
+inicializar
+
+telas := OrderedCollection new.
+UnCuerpo IPrecioBase.
+DosCuerpos IPrecioBase.
+TresCuerpos IPrecioBase.!
+
+listadoSillones
+|lista|
+lista := sillones asSortedCollection: [:a :b | a modelo < b modelo ].
+Transcript clear; show: 'Listado de sillones ordenados por modelo'; cr; 
+Transcript show: 'MODELOS'; tab; tab; show: 'Precio total'; cr;
+lista do: [:i | Transcript show: i modelo; tab; tab; i calcular printString; cr].
+
+ ! !
+!Empresa categoriesForMethods!
+inicializar!public! !
+listadoSillones!public! !
 !
 
 Establecimiento guid: (GUID fromString: '{eb806050-334b-495e-b86d-031513785c0f}')!
@@ -296,6 +357,42 @@ precio := (Prompter prompt: 'Ingrese precio basico') asNumber asInteger .
 ! !
 !Planta categoriesForMethods!
 cargaDatos!public! !
+!
+
+Sillon guid: (GUID fromString: '{b7c70162-1538-48cf-9139-75fdcbcb659e}')!
+Sillon comment: ''!
+!Sillon categoriesForClass!Kernel-Objects! !
+!Sillon methodsFor!
+
+asignaTela: unaTela
+tela := unaTela.!
+
+cargaDatos
+modelo := Prompter prompt: 'Ingrese nombre de modelo:'.
+m2 := (Prompter prompt: 'Ingrese cantidad de metros cuadrados:' ) asNumber asInteger.
+recargo := (Prompter prompt: 'Ingrese cantidad a recargar:' ) asNumber asInteger.
+! !
+!Sillon categoriesForMethods!
+asignaTela:!public! !
+cargaDatos!public! !
+!
+
+Tela guid: (GUID fromString: '{e55fd9b9-fa33-4e41-b8eb-09d68a8b3561}')!
+Tela comment: ''!
+!Tela categoriesForClass!Kernel-Objects! !
+!Tela methodsFor!
+
+cargaDatos
+
+nombre := (Prompter prompt: 'Ingrese nombre de tela' ).
+costoxm2 := (Prompter prompt: 'Ingrese costo por metro cuadrado' ) asNumber asFloat.
+!
+
+costoxm2
+^costoxm2! !
+!Tela categoriesForMethods!
+cargaDatos!public! !
+costoxm2!public! !
 !
 
 Vivero guid: (GUID fromString: '{6b87997d-276e-40d0-806a-069c6ef0c779}')!
@@ -423,6 +520,70 @@ precioFinal
 ^precio! !
 !Plantin categoriesForMethods!
 precioFinal!public! !
+!
+
+DosCuerpos guid: (GUID fromString: '{3e78aa52-b206-4064-8c5b-29baf6eabbbc}')!
+DosCuerpos comment: ''!
+!DosCuerpos categoriesForClass!Kernel-Objects! !
+!DosCuerpos methodsFor!
+
+precioBase
+^PrecioBase! !
+!DosCuerpos categoriesForMethods!
+precioBase!public! !
+!
+
+!DosCuerpos class methodsFor!
+
+IPrecioBase
+PrecioBase := (Prompter prompt: 'Ingrese precio base:' ) asNumber.! !
+!DosCuerpos class categoriesForMethods!
+IPrecioBase!public! !
+!
+
+TresCuerpos guid: (GUID fromString: '{cfc367ef-8af5-48fb-a38b-82bd3325f383}')!
+TresCuerpos comment: ''!
+!TresCuerpos categoriesForClass!Kernel-Objects! !
+!TresCuerpos methodsFor!
+
+precioBase
+^PrecioBase! !
+!TresCuerpos categoriesForMethods!
+precioBase!public! !
+!
+
+!TresCuerpos class methodsFor!
+
+IPrecioBase
+PrecioBase := (Prompter prompt: 'Ingrese precio base:' ) asNumber.! !
+!TresCuerpos class categoriesForMethods!
+IPrecioBase!public! !
+!
+
+UnCuerpo guid: (GUID fromString: '{e87c41a8-e9c9-4237-badf-7c4e2ebf8594}')!
+UnCuerpo comment: ''!
+!UnCuerpo categoriesForClass!Kernel-Objects! !
+!UnCuerpo methodsFor!
+
+calcular
+|pFinal|
+
+pFinal := PrecioBase + recargo + (m2 * tela costoxm2).
+^pFinal !
+
+precioBase
+^PrecioBase! !
+!UnCuerpo categoriesForMethods!
+calcular!public! !
+precioBase!public! !
+!
+
+!UnCuerpo class methodsFor!
+
+IPrecioBase
+PrecioBase := (Prompter prompt: 'Ingrese precio base:' ) asNumber.! !
+!UnCuerpo class categoriesForMethods!
+IPrecioBase!public! !
 !
 
 "Binary Globals"!
