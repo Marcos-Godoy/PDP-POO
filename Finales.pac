@@ -5,9 +5,15 @@ package paxVersion: 1;
 
 
 package classNames
+	add: #Alojamiento;
 	add: #ArbolFrutal;
 	add: #ArbolMayorPorte;
+	add: #Box;
+	add: #Caballo;
+	add: #Campo;
 	add: #ClienteVivero;
+	add: #Duenio;
+	add: #Establecimiento;
 	add: #PedidoVivero;
 	add: #Planta;
 	add: #Plantin;
@@ -30,8 +36,28 @@ package!
 
 "Class Definitions"!
 
+Object subclass: #Alojamiento
+	instanceVariableNames: 'codigo fecha caballo'
+	classVariableNames: 'UltimoCodigo'
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+Object subclass: #Caballo
+	instanceVariableNames: 'nombre raza edad duenio'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
 Object subclass: #ClienteVivero
 	instanceVariableNames: 'dni nombre apellido direccion'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+Object subclass: #Duenio
+	instanceVariableNames: 'nya dni domicilio contacto'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+Object subclass: #Establecimiento
+	instanceVariableNames: 'alojamientos duenios caballos'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -48,6 +74,16 @@ Object subclass: #Planta
 Object subclass: #Vivero
 	instanceVariableNames: 'platas pedidos clientes'
 	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+Alojamiento subclass: #Box
+	instanceVariableNames: 'nombre costo ubicacion tamanio estado'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+Alojamiento subclass: #Campo
+	instanceVariableNames: ''
+	classVariableNames: 'Costo'
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 Planta subclass: #ArbolFrutal
@@ -77,6 +113,62 @@ Planta subclass: #Plantin
 
 "Classes"!
 
+Alojamiento guid: (GUID fromString: '{5cb3a155-ad45-4e2e-919e-448f0465966d}')!
+Alojamiento comment: ''!
+!Alojamiento categoriesForClass!Kernel-Objects! !
+!Alojamiento methodsFor!
+
+asignarCaballo: unCaballo
+caballo := unCaballo.!
+
+cargaDatos
+codigo := Alojamiento IncDevUltimoCodigo.
+fecha := Date today.
+! !
+!Alojamiento categoriesForMethods!
+asignarCaballo:!public! !
+cargaDatos!public! !
+!
+
+!Alojamiento class methodsFor!
+
+IncDevUltimoCodigo
+UltimoCodigo := UltimoCodigo + 1.
+^UltimoCodigo.!
+
+iniciarCodigo
+UltimoCodigo := 0.! !
+!Alojamiento class categoriesForMethods!
+IncDevUltimoCodigo!public! !
+iniciarCodigo!public! !
+!
+
+Caballo guid: (GUID fromString: '{c162c460-7d50-4df1-b87d-1b43fac862a9}')!
+Caballo comment: ''!
+!Caballo categoriesForClass!Kernel-Objects! !
+!Caballo methodsFor!
+
+asignarDuenio: unD
+duenio := unD.!
+
+cargaDatos
+nombre := Prompter prompt: 'Ingrese nombre:'.
+raza := Prompter prompt: 'Ingrese raza'.
+edad := (Prompter prompt: 'Ingrese edad' ) asNumber  asInteger .!
+
+edad
+^edad!
+
+mostrarCaballo
+
+Transcript show: nombre; tab; edad; tab; duenio;cr! !
+!Caballo categoriesForMethods!
+asignarDuenio:!public! !
+cargaDatos!public! !
+edad!public! !
+mostrarCaballo!public! !
+!
+
 ClienteVivero guid: (GUID fromString: '{25802d97-24b9-4d79-8bac-65ccccada215}')!
 ClienteVivero comment: ''!
 !ClienteVivero categoriesForClass!Kernel-Objects! !
@@ -90,6 +182,73 @@ apellido := Prompter prompt: 'Ingrese nombre'.
 direccion := Prompter prompt: 'Ingrese nombre'.! !
 !ClienteVivero categoriesForMethods!
 cargaDatos!public! !
+!
+
+Duenio guid: (GUID fromString: '{bd82c73d-154a-46ab-ab62-ec8e829a6fc4}')!
+Duenio comment: ''!
+!Duenio categoriesForClass!Kernel-Objects! !
+!Duenio methodsFor!
+
+cargaDatos
+nya := (Prompter prompt: 'Ingrese nombre y apellido:' ).
+dni := (Prompter  prompt: 'Ingrese dni' ) asNumber asInteger.
+domicilio := (Prompter prompt: 'Ingrese domicilio' ).
+contacto := Prompter prompt: 'Ingrese telefono de contacto'.! !
+!Duenio categoriesForMethods!
+cargaDatos!public! !
+!
+
+Establecimiento guid: (GUID fromString: '{eb806050-334b-495e-b86d-031513785c0f}')!
+Establecimiento comment: ''!
+!Establecimiento categoriesForClass!Kernel-Objects! !
+!Establecimiento methodsFor!
+
+crearAlojamiento
+|nomDuenio duenio caballito op tipo boxito campito|
+op = true.
+nomDuenio := Prompter prompt: 'Ingrese nombre del dueño'.
+duenio := duenios detect: [:each | each nya = nomDuenio ] ifNone: [nil].
+(duenio isNil ) ifTrue: [
+duenio := Duenio new.
+duenio cargaDatos.
+].
+caballito := Caballo new.
+caballito cargaDatos.
+caballito asignarDuenio: duenio.
+(op = true) whileTrue: [
+tipo := (Prompter prompt: 'Ingrese tipo de alojamiento (c o b)' ) asUppercase.
+(tipo = 'B' or: [tipo = 'C']) ifTrue: [op := false ].
+].
+(tipo = 'B') ifTrue: [
+boxito := Box new.
+boxito cargaDatos.
+]
+ifFalse: [
+campito := Campo new.
+
+].
+
+!
+
+inicializa
+duenios := OrderedCollection new.
+alojamientos := OrderedCollection new.
+caballos := OrderedCollection new.
+Alojamiento iniciarCodigo.
+Campo ICosto.!
+
+listadoCaballos
+|caballitos|
+caballitos := caballos select: [:each | each edad > 10] ifNone: [nil].
+(caballitos isEmpty) ifTrue: [MessageBox notify: 'No hay caballos mayores a 10 anios'. ]
+ifFalse: [
+Transcript clear; show: 'Nombre'; tab; show: 'Edad'; tab; show: 'Nombre dueño'; cr.
+caballitos do: [:each | each mostrarCaballo].
+].! !
+!Establecimiento categoriesForMethods!
+crearAlojamiento!public! !
+inicializa!public! !
+listadoCaballos!public! !
 !
 
 PedidoVivero guid: (GUID fromString: '{f1471a71-6f6e-4fd7-ab0b-1968293a10b0}')!
@@ -178,6 +337,45 @@ platas do: [:each | each ]! !
 altaPedido!public! !
 buscarOCrearCliente!public! !
 mostrarPlantas!public! !
+!
+
+Box guid: (GUID fromString: '{9929d360-af5d-4990-b6c7-211203732023}')!
+Box comment: ''!
+!Box categoriesForClass!Kernel-Objects! !
+!Box methodsFor!
+
+cargaDatos
+
+nombre := Prompter prompt: 'Ingrese nombre:'.
+ubicacion := (Prompter prompt: 'Ingrese ubicacion:' ) asNumber asInteger.
+costo := (Prompter prompt: 'Ingrese costo:' ) asNumber asInteger.
+estado := Prompter prompt: 'Ingrese estado:'.
+tamanio := Prompter prompt: 'Ingrese tamaño:'.!
+
+costo
+^costo! !
+!Box categoriesForMethods!
+cargaDatos!public! !
+costo!public! !
+!
+
+Campo guid: (GUID fromString: '{affeb171-580b-49c8-a212-60c183b2d59d}')!
+Campo comment: ''!
+!Campo categoriesForClass!Kernel-Objects! !
+!Campo methodsFor!
+
+costo
+^Costo! !
+!Campo categoriesForMethods!
+costo!public! !
+!
+
+!Campo class methodsFor!
+
+ICosto
+Costo := Prompter prompt: 'Ingrese costo fijo para campo:'.! !
+!Campo class categoriesForMethods!
+ICosto!public! !
 !
 
 ArbolFrutal guid: (GUID fromString: '{e0c1322d-9f69-4e76-a8b8-5e15d07b341e}')!
